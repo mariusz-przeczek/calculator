@@ -19,12 +19,9 @@ class CalculatorViewModel : ViewModel() {
         uiState = CalculatorUiState()
     }
 
-    fun onPlus() = uiState.copy(
-        display = uiState.display,
-        pending = uiState.display.toInt(),
-        operator = '+',
-        startNew = true
-    )
+    fun onPlus() {
+        uiState = uiState.copy(pending = uiState.display.toInt(), operator = '+', startNew = true)
+    }
 
     fun onEquals() {
         val pending = uiState.pending
