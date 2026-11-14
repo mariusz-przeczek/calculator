@@ -3,8 +3,9 @@ package io.github.mariuszprzeczek.calculator
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.ViewModel
 
-class CalculatorViewModel {
+class CalculatorViewModel : ViewModel() {
     var uiState by mutableStateOf(CalculatorUiState())
         private set
 
@@ -18,14 +19,17 @@ class CalculatorViewModel {
         uiState = CalculatorUiState()
     }
 
-    fun onPlus() {
-        val s = CalculatorUiState(display = uiState.display, pending = uiState.display.toInt(), operator = '+', startNew = true)
-        uiState = s
-    }
+    fun onPlus() = uiState.copy(
+        display = uiState.display,
+        pending = uiState.display.toInt(),
+        operator = '+',
+        startNew = true
+    )
 
     fun onEquals() {
-        if (uiState.pending != null && uiState.operator == '+') {
-            val sum = uiState.display.toInt() + uiState.pending!!
+        val pending = uiState.pending
+        if (pending != null && uiState.operator == '+') {
+            val sum = uiState.display.toInt() + pending
             uiState = CalculatorUiState(display = sum.toString(), startNew = true)
         }
     }
