@@ -23,7 +23,7 @@ class CalculatorViewModelTest {
 
     @Test
     fun clear_resetDisplay() {
-        val  vm = CalculatorViewModel()
+        val vm = CalculatorViewModel()
         vm.onDigit(5)
         vm.onClear()
         assertEquals("0", vm.uiState.display)
@@ -100,7 +100,7 @@ class CalculatorViewModelTest {
     }
 
     @Test
-    fun onePlusTwoPlusThree_isSIx() {
+    fun onePlusTwoPlusThree_isSix() {
         val vm = CalculatorViewModel()
         vm.onDigit(1)
         vm.onOperator('+')
@@ -110,5 +110,28 @@ class CalculatorViewModelTest {
         vm.onDigit(3)
         vm.onEquals()
         assertEquals("6", vm.uiState.display)
+    }
+
+    @Test
+    fun fiveMinusTwoPlusOne_isFour() {
+        val vm = CalculatorViewModel()
+        vm.onDigit(5)
+        vm.onOperator('-')
+        vm.onDigit(2)
+        vm.onOperator('+')
+        assertEquals("3", vm.uiState.display)
+        vm.onDigit(1)
+        vm.onEquals()
+        assertEquals("4", vm.uiState.display)
+    }
+
+    @Test
+    fun dividedByZeroThenOperatorPressed_showsError() {
+        val vm = CalculatorViewModel()
+        vm.onDigit(5)
+        vm.onOperator('/')
+        vm.onDigit(0)
+        vm.onOperator('+')
+        assertEquals("Error", vm.uiState.display)
     }
 }

@@ -29,14 +29,20 @@ class CalculatorViewModel : ViewModel() {
 
     fun onOperator(op: Char) {
         val pending = uiState.pending
-        uiState = if (pending != null && !uiState.startNew) {
-            val result = calculate(a = pending, b = uiState.display.toInt(), op = op)
-            uiState.copy(
-                display = result.toString(),
-                pending = result,
-                operator = op,
-                startNew = true
-            )
+        val prevOp = uiState.operator
+        uiState = if (pending != null && prevOp != null && !uiState.startNew) {
+            val result = calculate(a = pending, b = uiState.display.toInt(), op = prevOp)
+
+            if (result != null) {
+                uiState.copy(
+                    display = result.toString(),
+                    pending = result,
+                    operator = op,
+                    startNew = true
+                )
+            } else {
+                uiState.copy(display = "Error", pending = null, operator = null, startNew = true)
+            }
         } else {
             uiState.copy(pending = uiState.display.toInt(), operator = op, startNew = true)
         }
