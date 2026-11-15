@@ -9,16 +9,21 @@ class CalculatorViewModel : ViewModel() {
     var uiState by mutableStateOf(CalculatorUiState())
         private set
 
-    private fun calculate(a: Int, b: Int, op: Char): Int? = when (op) {
-        '+' -> a + b
-        '-' -> a - b
-        '*' -> a * b
-        '/' -> if (b == 0) null else a / b
-        else -> null
+    private fun calculate(a: Long, b: Long, op: Char): Long? = try {
+        when (op) {
+            '+' -> Math.addExact(a, b)
+            '-' -> Math.subtractExact(a, b)
+            '*' -> Math.multiplyExact(a, b)
+            '/' -> if (b == 0.toLong()) null else a / b
+            else -> null
+        }
+    } catch (e: ArithmeticException) {
+        null
     }
 
     fun onDigit(d: Int) {
         val s = uiState
+        if (s.display.length >= 15 && !s.startNew) return
         val newDisplay = if (s.display == "0" || s.startNew) "$d" else s.display + d
         uiState = s.copy(display = newDisplay, startNew = false)
     }
@@ -33,7 +38,7 @@ class CalculatorViewModel : ViewModel() {
         val pending = uiState.pending
         val prevOp = uiState.operator
         uiState = if (pending != null && prevOp != null && !uiState.startNew) {
-            val result = calculate(a = pending, b = uiState.display.toInt(), op = prevOp)
+            val result = calculate(a = pending, b = uiState.display.toLong(), op = prevOp)
 
             if (result != null) {
                 uiState.copy(
@@ -51,7 +56,7 @@ class CalculatorViewModel : ViewModel() {
                 )
             }
         } else {
-            uiState.copy(pending = uiState.display.toInt(), operator = op, startNew = true)
+            uiState.copy(pending = uiState.display.toLong(), operator = op, startNew = true)
         }
     }
 
@@ -60,7 +65,7 @@ class CalculatorViewModel : ViewModel() {
         val operator = uiState.operator
 
         if (pending != null && operator != null) {
-            val result = calculate(a = pending, b = uiState.display.toInt(), op = operator)
+            val result = calculate(a = pending, b = uiState.display.toLong(), op = operator)
 
             uiState = if (result == null) {
                 uiState.copy(display = "Error", pending = null, operator = null, startNew = true)
