@@ -12,6 +12,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.mariuszprzeczek.calculator.ui.theme.CalculatorTheme
 
 @Composable
 fun CalculatorDisplay(
@@ -48,9 +49,9 @@ fun CalculatorDisplay(
             CalcButton("×", { onOperator('*') }, Modifier.weight(1f))
         }
         Row {
-            CalcButton("C", { onClear() }, Modifier.weight(1f))
+            CalcButton("C",  onClear, Modifier.weight(1f))
             CalcButton("0", { onDigit(0) }, Modifier.weight(1f))
-            CalcButton("=", { onEquals() }, Modifier.weight(1f))
+            CalcButton("=", onEquals, Modifier.weight(1f))
             CalcButton("+", { onOperator('+') }, Modifier.weight(1f))
         }
     }
@@ -76,11 +77,13 @@ fun CalcButton(label: String, onClick: () -> Unit, modifier: Modifier = Modifier
 @Preview(showBackground = true)
 @Composable
 fun CalculatorScreenPreview() {
-    CalculatorDisplay(
-        state = CalculatorUiState(display = "123"),
-        onDigit = {},
-        onOperator = {},
-        onEquals = {},
-        onClear = {}
-    )
+    CalculatorTheme {
+        CalculatorDisplay(
+            state = CalculatorUiState(display = "123"),
+            onDigit = {},
+            onOperator = {},
+            onEquals = {},
+            onClear = {}
+        )
+    }
 }
