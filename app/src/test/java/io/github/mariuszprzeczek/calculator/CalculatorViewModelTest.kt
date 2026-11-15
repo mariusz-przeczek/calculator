@@ -181,4 +181,42 @@ class CalculatorViewModelTest {
         vm.onEquals()
         assertEquals("Error", vm.uiState.display)
     }
+
+    @Test
+    fun sixteenDigits_keepsFifteen() {
+        val vm = CalculatorViewModel()
+        repeat(16) { vm.onDigit(9)}
+        assertEquals("9".repeat(15), vm.uiState.display)
+    }
+
+    @Test
+    fun fifteenDigitResultThenDigit_startsNew() {
+        val vm = CalculatorViewModel()
+        vm.onDigit(123456789)
+        vm.onOperator('*')
+        vm.onDigit(1000000)
+        vm.onEquals()
+        vm.onDigit(7)
+        assertEquals("7", vm.uiState.display)
+    }
+
+    @Test
+    fun ninesTimesNines_isCorrect() {
+        val vm = CalculatorViewModel()
+        vm.onDigit(99999)
+        vm.onOperator('*')
+        vm.onDigit(99999)
+        vm.onEquals()
+        assertEquals("9999800001", vm.uiState.display)
+    }
+
+    @Test
+    fun hugeTimesHuge_showsError() {
+        val vm = CalculatorViewModel()
+        repeat(15) { vm.onDigit(9) }
+        vm.onOperator('*')
+        repeat(15) { vm.onDigit(9) }
+        vm.onEquals()
+        assertEquals("Error", vm.uiState.display)
+    }
 }

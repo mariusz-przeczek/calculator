@@ -40,7 +40,7 @@ fun CalculatorDisplay(
         verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Bottom)
     ) {
         Text(
-            fontSize = 64.sp,
+            fontSize = if (state.display.length > 9) 36.sp else 64.sp,
             textAlign = TextAlign.End,
             modifier = Modifier.fillMaxWidth(),
             text = state.display,
@@ -103,7 +103,7 @@ fun RowScope.CalcButton(
 fun CalculatorScreenPreview() {
     CalculatorTheme {
         CalculatorDisplay(
-            state = CalculatorUiState(display = "123456789"),
+            state = CalculatorUiState(display = "123456789012345"),
             onDigit = {},
             onOperator = {},
             onEquals = {},
