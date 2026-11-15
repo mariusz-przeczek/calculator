@@ -134,4 +134,51 @@ class CalculatorViewModelTest {
         vm.onOperator('+')
         assertEquals("Error", vm.uiState.display)
     }
+
+    @Test
+    fun errorThenDigit_showsDigit() {
+        val vm = CalculatorViewModel()
+        vm.onDigit(5)
+        vm.onOperator('/')
+        vm.onDigit(0)
+        vm.onEquals()
+        vm.onDigit(7)
+        assertEquals("7", vm.uiState.display)
+    }
+
+    @Test
+    fun errorThenOperator_staysError() {
+        val vm = CalculatorViewModel()
+        vm.onDigit(5)
+        vm.onOperator('/')
+        vm.onDigit(0)
+        vm.onEquals()
+        vm.onOperator('+')
+        assertEquals("Error", vm.uiState.display)
+    }
+
+    @Test
+    fun errorThenNewSum_isCorrect() {
+        val vm = CalculatorViewModel()
+        vm.onDigit(5)
+        vm.onOperator('/')
+        vm.onDigit(0)
+        vm.onEquals()
+        vm.onDigit(7)
+        vm.onOperator('+')
+        vm.onDigit(1)
+        vm.onEquals()
+        assertEquals("8", vm.uiState.display)
+    }
+
+    @Test
+    fun errorThenEquals_staysError() {
+        val vm = CalculatorViewModel()
+        vm.onDigit(5)
+        vm.onOperator('/')
+        vm.onDigit(0)
+        vm.onEquals()
+        vm.onEquals()
+        assertEquals("Error", vm.uiState.display)
+    }
 }
