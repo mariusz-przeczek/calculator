@@ -3,6 +3,7 @@ package io.github.mariuszprzeczek.calculator
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -46,90 +47,28 @@ fun CalculatorDisplay(
             maxLines = 1
         )
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            CalcButton("7", { onDigit(7) }, Modifier
-                .weight(1f)
-                .aspectRatio(1f))
-            CalcButton("8", { onDigit(8) }, Modifier
-                .weight(1f)
-                .aspectRatio(1f))
-            CalcButton("9", { onDigit(9) }, Modifier
-                .weight(1f)
-                .aspectRatio(1f))
-            CalcButton(
-                "÷",
-                { onOperator('/') },
-                Modifier
-                    .weight(1f)
-                    .aspectRatio(1f),
-                MaterialTheme.colorScheme.tertiary
-            )
+            CalcButton("7", { onDigit(7) })
+            CalcButton("8", { onDigit(8) })
+            CalcButton("9", { onDigit(9) })
+            CalcButton("÷", { onOperator('/') }, color = MaterialTheme.colorScheme.tertiary)
         }
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            CalcButton("4", { onDigit(4) }, Modifier
-                .weight(1f)
-                .aspectRatio(1f))
-            CalcButton("5", { onDigit(5) }, Modifier
-                .weight(1f)
-                .aspectRatio(1f))
-            CalcButton("6", { onDigit(6) }, Modifier
-                .weight(1f)
-                .aspectRatio(1f))
-            CalcButton(
-                "-",
-                { onOperator('-') },
-                Modifier
-                    .weight(1f)
-                    .aspectRatio(1f),
-                MaterialTheme.colorScheme.tertiary
-            )
+            CalcButton("4", { onDigit(4) })
+            CalcButton("5", { onDigit(5) })
+            CalcButton("6", { onDigit(6) })
+            CalcButton("-", { onOperator('-') }, color = MaterialTheme.colorScheme.tertiary)
         }
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            CalcButton("1", { onDigit(1) }, Modifier
-                .weight(1f)
-                .aspectRatio(1f))
-            CalcButton("2", { onDigit(2) }, Modifier
-                .weight(1f)
-                .aspectRatio(1f))
-            CalcButton("3", { onDigit(3) }, Modifier
-                .weight(1f)
-                .aspectRatio(1f))
-            CalcButton(
-                "×",
-                { onOperator('*') },
-                Modifier
-                    .weight(1f)
-                    .aspectRatio(1f),
-                MaterialTheme.colorScheme.tertiary
-            )
+            CalcButton("1", { onDigit(1) })
+            CalcButton("2", { onDigit(2) })
+            CalcButton("3", { onDigit(3) })
+            CalcButton("×", { onOperator('*') }, color = MaterialTheme.colorScheme.tertiary)
         }
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            CalcButton(
-                "C",
-                onClear,
-                Modifier
-                    .weight(1f)
-                    .aspectRatio(1f),
-                MaterialTheme.colorScheme.secondary
-            )
-            CalcButton("0", { onDigit(0) }, Modifier
-                .weight(1f)
-                .aspectRatio(1f))
-            CalcButton(
-                "=",
-                onEquals,
-                Modifier
-                    .weight(1f)
-                    .aspectRatio(1f),
-                MaterialTheme.colorScheme.tertiary
-            )
-            CalcButton(
-                "+",
-                { onOperator('+') },
-                Modifier
-                    .weight(1f)
-                    .aspectRatio(1f),
-                MaterialTheme.colorScheme.tertiary
-            )
+            CalcButton("C", onClear, color = MaterialTheme.colorScheme.secondary)
+            CalcButton("0", { onDigit(0) })
+            CalcButton("=", onEquals, color = MaterialTheme.colorScheme.tertiary)
+            CalcButton("+", { onOperator('+') }, color = MaterialTheme.colorScheme.tertiary)
         }
     }
 }
@@ -147,15 +86,14 @@ fun CalculatorScreen(modifier: Modifier = Modifier, viewModel: CalculatorViewMod
 }
 
 @Composable
-fun CalcButton(
-    label: String,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    color: Color = MaterialTheme.colorScheme.primary
+fun RowScope.CalcButton(
+    label: String, onClick: () -> Unit, color: Color = MaterialTheme.colorScheme.primary
 ) {
     Button(
         onClick = onClick,
-        modifier = modifier,
+        modifier = Modifier
+            .weight(1f)
+            .aspectRatio(1f),
         colors = ButtonDefaults.buttonColors(containerColor = color)
     ) { Text(label, fontSize = 28.sp) }
 }
@@ -169,7 +107,6 @@ fun CalculatorScreenPreview() {
             onDigit = {},
             onOperator = {},
             onEquals = {},
-            onClear = {}
-        )
+            onClear = {})
     }
 }
