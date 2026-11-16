@@ -14,7 +14,7 @@ class CalculatorViewModel : ViewModel() {
             '+' -> Math.addExact(a, b)
             '-' -> Math.subtractExact(a, b)
             '*' -> Math.multiplyExact(a, b)
-            '/' -> if (b == 0.toLong()) null else a / b
+            '/' -> if (b == 0L) null else a / b
             else -> null
         }
     } catch (e: ArithmeticException) {
@@ -26,10 +26,6 @@ class CalculatorViewModel : ViewModel() {
         if (s.display.length >= 15 && !s.startNew) return
         val newDisplay = if (s.display == "0" || s.startNew) "$d" else s.display + d
         uiState = s.copy(display = newDisplay, startNew = false)
-    }
-
-    fun onClear() {
-        uiState = CalculatorUiState()
     }
 
     fun onOperator(op: Char) {
@@ -78,5 +74,15 @@ class CalculatorViewModel : ViewModel() {
                 )
             }
         }
+    }
+
+    fun onClear() {
+        uiState = CalculatorUiState()
+    }
+
+    fun onBackspace() {
+        if (uiState.startNew) return
+        val afterBackspace = uiState.display.dropLast(1).ifEmpty { "0" }
+        uiState = uiState.copy(display = afterBackspace)
     }
 }

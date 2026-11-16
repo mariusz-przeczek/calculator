@@ -4,20 +4,21 @@ import org.junit.Test
 
 import org.junit.Assert.*
 
+private fun CalculatorViewModel.type(n: String) =
+    n.forEach { onDigit(it.digitToInt()) }
+
 class CalculatorViewModelTest {
     @Test
     fun digits_appendToDisplay() {
         val vm = CalculatorViewModel()
-        vm.onDigit(1)
-        vm.onDigit(2)
+        vm.type("12")
         assertEquals("12", vm.uiState.display)
     }
 
     @Test
     fun zeroThenSeven_showsSeven() {
         val vm = CalculatorViewModel()
-        vm.onDigit(0)
-        vm.onDigit(7)
+        vm.type("07")
         assertEquals("7", vm.uiState.display)
     }
 
@@ -32,8 +33,7 @@ class CalculatorViewModelTest {
     @Test
     fun twelvePlusThree_isFifteen() {
         val vm = CalculatorViewModel()
-        vm.onDigit(1)
-        vm.onDigit(2)
+        vm.type("12")
         vm.onOperator('+')
         vm.onDigit(3)
         vm.onEquals()
@@ -192,9 +192,9 @@ class CalculatorViewModelTest {
     @Test
     fun fifteenDigitResultThenDigit_startsNew() {
         val vm = CalculatorViewModel()
-        vm.onDigit(123456789)
+        vm.type("123456789")
         vm.onOperator('*')
-        vm.onDigit(1000000)
+        vm.type("1000000")
         vm.onEquals()
         vm.onDigit(7)
         assertEquals("7", vm.uiState.display)
@@ -203,9 +203,9 @@ class CalculatorViewModelTest {
     @Test
     fun ninesTimesNines_isCorrect() {
         val vm = CalculatorViewModel()
-        vm.onDigit(99999)
+        vm.type("99999")
         vm.onOperator('*')
-        vm.onDigit(99999)
+        vm.type("99999")
         vm.onEquals()
         assertEquals("9999800001", vm.uiState.display)
     }
@@ -217,6 +217,44 @@ class CalculatorViewModelTest {
         vm.onOperator('*')
         repeat(15) { vm.onDigit(9) }
         vm.onEquals()
+        assertEquals("Error", vm.uiState.display)
+    }
+
+    @Test
+    fun oneTwoThreeThenBackspace_showsTwelve() {
+        val vm = CalculatorViewModel()
+        vm.type("123")
+        vm.onBackspace()
+        assertEquals("12", vm.uiState.display)
+    }
+
+    @Test
+    fun sevenThenBackspace_showsZero() {
+        val vm = CalculatorViewModel()
+        vm.onDigit(7)
+        vm.onBackspace()
+        assertEquals("0", vm.uiState.display)
+    }
+
+    @Test
+    fun backspaceAfterEquals_resultStaysUnchanged() {
+        val vm = CalculatorViewModel()
+        vm.onDigit(1)
+        vm.onOperator('+')
+        vm.onDigit(2)
+        vm.onEquals()
+        vm.onBackspace()
+        assertEquals("3", vm.uiState.display)
+    }
+
+    @Test
+    fun backspaceOnError_showsError() {
+        val vm = CalculatorViewModel()
+        vm.onDigit(9)
+        vm.onOperator('/')
+        vm.onDigit(0)
+        vm.onEquals()
+        vm.onBackspace()
         assertEquals("Error", vm.uiState.display)
     }
 }

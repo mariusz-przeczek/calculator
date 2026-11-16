@@ -6,12 +6,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,6 +30,7 @@ fun CalculatorDisplay(
     onOperator: (Char) -> Unit,
     onEquals: () -> Unit,
     onClear: () -> Unit,
+    onBackspace: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -39,13 +40,18 @@ fun CalculatorDisplay(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Bottom)
     ) {
-        Text(
-            fontSize = if (state.display.length > 9) 36.sp else 64.sp,
-            textAlign = TextAlign.End,
-            modifier = Modifier.fillMaxWidth(),
-            text = state.display,
-            maxLines = 1
-        )
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                fontSize = if (state.display.length > 9) 36.sp else 64.sp,
+                textAlign = TextAlign.End,
+                modifier = Modifier.weight(1f),
+                text = state.display,
+                maxLines = 1
+            )
+            TextButton(onClick = onBackspace) {
+                Text("⌫", fontSize = 28.sp)
+            }
+        }
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             CalcButton("7", { onDigit(7) })
             CalcButton("8", { onDigit(8) })
@@ -81,6 +87,7 @@ fun CalculatorScreen(modifier: Modifier = Modifier, viewModel: CalculatorViewMod
         onOperator = viewModel::onOperator,
         onEquals = viewModel::onEquals,
         onClear = viewModel::onClear,
+        onBackspace = viewModel::onBackspace,
         modifier = modifier
     )
 }
@@ -107,6 +114,7 @@ fun CalculatorScreenPreview() {
             onDigit = {},
             onOperator = {},
             onEquals = {},
+            onBackspace = {},
             onClear = {})
     }
 }
