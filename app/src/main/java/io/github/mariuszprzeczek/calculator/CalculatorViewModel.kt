@@ -14,7 +14,7 @@ class CalculatorViewModel : ViewModel() {
             '+' -> Math.addExact(a, b)
             '-' -> Math.subtractExact(a, b)
             '*' -> Math.multiplyExact(a, b)
-            '/' -> if (b == 0.toLong()) null else a / b
+            '/' -> if (b == 0L) null else a / b
             else -> null
         }
     } catch (e: ArithmeticException) {
