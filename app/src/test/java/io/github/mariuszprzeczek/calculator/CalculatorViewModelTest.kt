@@ -219,4 +219,42 @@ class CalculatorViewModelTest {
         vm.onEquals()
         assertEquals("Error", vm.uiState.display)
     }
+
+    @Test
+    fun oneTwoThreeThenBackspace_showsTwelve() {
+        val vm = CalculatorViewModel()
+        vm.type("123")
+        vm.onBackspace()
+        assertEquals("12", vm.uiState.display)
+    }
+
+    @Test
+    fun sevenThenBackspace_showsZero() {
+        val vm = CalculatorViewModel()
+        vm.onDigit(7)
+        vm.onBackspace()
+        assertEquals("0", vm.uiState.display)
+    }
+
+    @Test
+    fun backspaceAfterEquals_resultStaysUnchanged() {
+        val vm = CalculatorViewModel()
+        vm.onDigit(1)
+        vm.onOperator('+')
+        vm.onDigit(2)
+        vm.onEquals()
+        vm.onBackspace()
+        assertEquals("3", vm.uiState.display)
+    }
+
+    @Test
+    fun backspaceOnError_showsError() {
+        val vm = CalculatorViewModel()
+        vm.onDigit(9)
+        vm.onOperator('/')
+        vm.onDigit(0)
+        vm.onEquals()
+        vm.onBackspace()
+        assertEquals("Error", vm.uiState.display)
+    }
 }

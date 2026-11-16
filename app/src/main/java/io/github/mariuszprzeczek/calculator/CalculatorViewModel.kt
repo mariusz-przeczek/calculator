@@ -28,10 +28,6 @@ class CalculatorViewModel : ViewModel() {
         uiState = s.copy(display = newDisplay, startNew = false)
     }
 
-    fun onClear() {
-        uiState = CalculatorUiState()
-    }
-
     fun onOperator(op: Char) {
         if (uiState.display == "Error") return
 
@@ -78,5 +74,15 @@ class CalculatorViewModel : ViewModel() {
                 )
             }
         }
+    }
+
+    fun onClear() {
+        uiState = CalculatorUiState()
+    }
+
+    fun onBackspace() {
+        if (uiState.startNew) return
+        val afterBackspace = uiState.display.dropLast(1).ifEmpty { "0" }
+        uiState = uiState.copy(display = afterBackspace)
     }
 }
