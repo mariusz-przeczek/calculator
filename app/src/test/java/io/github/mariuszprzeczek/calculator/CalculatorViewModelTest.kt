@@ -1,7 +1,6 @@
 package io.github.mariuszprzeczek.calculator
 
 import org.junit.Test
-
 import org.junit.Assert.*
 import org.junit.Ignore
 
