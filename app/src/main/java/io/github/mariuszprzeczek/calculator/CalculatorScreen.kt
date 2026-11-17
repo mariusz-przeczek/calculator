@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -31,6 +32,8 @@ fun CalculatorDisplay(
     onEquals: () -> Unit,
     onClear: () -> Unit,
     onBackspace: () -> Unit,
+    onOpenBracket: () -> Unit,
+    onCloseBracket: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -53,10 +56,16 @@ fun CalculatorDisplay(
             }
         }
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            CalcButton("C", onClear)
+            CalcButton("(", onOpenBracket)
+            CalcButton(")", onCloseBracket)
+            CalcButton("÷", { onOperator('÷') }, color = MaterialTheme.colorScheme.tertiary)
+        }
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             CalcButton("7", { onDigit(7) })
             CalcButton("8", { onDigit(8) })
             CalcButton("9", { onDigit(9) })
-            CalcButton("÷", { onOperator('/') }, color = MaterialTheme.colorScheme.tertiary)
+            CalcButton("×", { onOperator('×') }, color = MaterialTheme.colorScheme.tertiary)
         }
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             CalcButton("4", { onDigit(4) })
@@ -68,13 +77,13 @@ fun CalculatorDisplay(
             CalcButton("1", { onDigit(1) })
             CalcButton("2", { onDigit(2) })
             CalcButton("3", { onDigit(3) })
-            CalcButton("×", { onOperator('*') }, color = MaterialTheme.colorScheme.tertiary)
+            CalcButton("+", { onOperator('+') }, color = MaterialTheme.colorScheme.tertiary)
         }
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            CalcButton("C", onClear, color = MaterialTheme.colorScheme.secondary)
+            Spacer(modifier = Modifier.weight(1f))
             CalcButton("0", { onDigit(0) })
-            CalcButton("=", onEquals, color = MaterialTheme.colorScheme.tertiary)
-            CalcButton("+", { onOperator('+') }, color = MaterialTheme.colorScheme.tertiary)
+            Spacer(modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.weight(1f))
         }
     }
 }
@@ -88,6 +97,8 @@ fun CalculatorScreen(modifier: Modifier = Modifier, viewModel: CalculatorViewMod
         onEquals = viewModel::onEquals,
         onClear = viewModel::onClear,
         onBackspace = viewModel::onBackspace,
+        onOpenBracket = viewModel::onOpenBracket,
+        onCloseBracket = viewModel::onCloseBracket,
         modifier = modifier
     )
 }
@@ -110,11 +121,13 @@ fun RowScope.CalcButton(
 fun CalculatorScreenPreview() {
     CalculatorTheme {
         CalculatorDisplay(
-            state = CalculatorUiState(display = "123456789012345"),
+            state = CalculatorUiState(expression = "123456789012345"),
             onDigit = {},
             onOperator = {},
             onEquals = {},
             onBackspace = {},
-            onClear = {})
+            onClear = {},
+            onOpenBracket = {},
+            onCloseBracket = {})
     }
 }

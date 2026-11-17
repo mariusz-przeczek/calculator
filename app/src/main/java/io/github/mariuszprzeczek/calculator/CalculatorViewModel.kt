@@ -9,71 +9,41 @@ class CalculatorViewModel : ViewModel() {
     var uiState by mutableStateOf(CalculatorUiState())
         private set
 
-    private fun calculate(a: Long, b: Long, op: Char): Long? = try {
-        when (op) {
-            '+' -> Math.addExact(a, b)
-            '-' -> Math.subtractExact(a, b)
-            '*' -> Math.multiplyExact(a, b)
-            '/' -> if (b == 0L) null else a / b
-            else -> null
-        }
-    } catch (e: ArithmeticException) {
-        null
-    }
-
     fun onDigit(d: Int) {
-        val s = uiState
-        if (s.display.length >= 15 && !s.startNew) return
-        val newDisplay = if (s.display == "0" || s.startNew) "$d" else s.display + d
-        uiState = s.copy(display = newDisplay, startNew = false)
+        val last = uiState.expression.lastOrNull()
+        if ( last == ')' ) return
+        if ( last != null && uiState.expression.takeLastWhile { it.isDigit() }.length >= 15 ) return
+        val base = if (uiState.expression.takeLastWhile { it.isDigit() } == "0" ) uiState.expression.dropLast(1) else uiState.expression
+        uiState = uiState.copy(expression = base + d)
     }
 
     fun onOperator(op: Char) {
-        if (uiState.display == "Error") return
+        val last = uiState.expression.lastOrNull() ?: return
+        if (last == '(') return
+        val base = if (last in "+-×÷") uiState.expression.dropLast(1) else uiState.expression
+        uiState = uiState.copy(expression = base + op)
+    }
 
-        val pending = uiState.pending
-        val prevOp = uiState.operator
-        uiState = if (pending != null && prevOp != null && !uiState.startNew) {
-            val result = calculate(a = pending, b = uiState.display.toLong(), op = prevOp)
+    fun onOpenBracket() {
+        val last = uiState.expression.lastOrNull()
+        if (last != null && last !in "+-×÷(") return
+        uiState = uiState.copy(expression = uiState.expression + "(")
+    }
 
-            if (result != null) {
-                uiState.copy(
-                    display = result.toString(),
-                    pending = result,
-                    operator = op,
-                    startNew = true
-                )
-            } else {
-                uiState.copy(
-                    display = "Error",
-                    pending = null,
-                    operator = null,
-                    startNew = true
-                )
-            }
-        } else {
-            uiState.copy(pending = uiState.display.toLong(), operator = op, startNew = true)
+    fun onCloseBracket() {
+        val last = uiState.expression.lastOrNull() ?: return
+        if (last != ')' && last !in '0'..'9') return
+        var openBrackets = 0
+        var closedBrackets = 0
+        uiState.expression.forEach {
+            if (it == '(') openBrackets++
+            if (it == ')') closedBrackets++
         }
+        if (openBrackets - closedBrackets < 1) return
+        uiState = uiState.copy(expression = uiState.expression + ")")
     }
 
     fun onEquals() {
-        val pending = uiState.pending
-        val operator = uiState.operator
-
-        if (pending != null && operator != null) {
-            val result = calculate(a = pending, b = uiState.display.toLong(), op = operator)
-
-            uiState = if (result == null) {
-                uiState.copy(display = "Error", pending = null, operator = null, startNew = true)
-            } else {
-                uiState.copy(
-                    display = result.toString(),
-                    pending = null,
-                    operator = null,
-                    startNew = true
-                )
-            }
-        }
     }
 
     fun onClear() {
@@ -81,8 +51,6 @@ class CalculatorViewModel : ViewModel() {
     }
 
     fun onBackspace() {
-        if (uiState.startNew) return
-        val afterBackspace = uiState.display.dropLast(1).ifEmpty { "0" }
-        uiState = uiState.copy(display = afterBackspace)
+        uiState = uiState.copy(expression = uiState.expression.dropLast(1))
     }
 }
