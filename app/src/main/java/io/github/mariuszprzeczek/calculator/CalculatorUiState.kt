@@ -1,8 +1,5 @@
 package io.github.mariuszprzeczek.calculator
 
-data class CalculatorUiState(
-    val display: String = "0",
-    val pending: Long? = null,
-    val operator: Char? = null,
-    val startNew: Boolean = false,
-)
+data class CalculatorUiState(val expression: String = "") {
+    val display: String get() = expression.ifEmpty { "0" }
+}
