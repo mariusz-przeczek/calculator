@@ -294,6 +294,7 @@ class CalculatorViewModelTest {
     @Test
     fun whenEmpty_showsZero() {
         val vm = CalculatorViewModel()
+        vm.type("+")
         assertEquals("0", vm.uiState.display)
     }
 

@@ -12,8 +12,9 @@ class CalculatorViewModel : ViewModel() {
     fun onDigit(d: Int) {
         val last = uiState.expression.lastOrNull()
         if ( last == ')' ) return
-        if ( last != null && uiState.expression.takeLastWhile { it.isDigit() }.length >= 15 ) return
-        val base = if (uiState.expression.takeLastWhile { it.isDigit() } == "0" ) uiState.expression.dropLast(1) else uiState.expression
+        val current = uiState.expression.takeLastWhile { it.isDigit() }
+        if ( current.length >= 15 ) return
+        val base = if (current == "0" ) uiState.expression.dropLast(1) else uiState.expression
         uiState = uiState.copy(expression = base + d)
     }
 
@@ -33,12 +34,8 @@ class CalculatorViewModel : ViewModel() {
     fun onCloseBracket() {
         val last = uiState.expression.lastOrNull() ?: return
         if (last != ')' && last !in '0'..'9') return
-        var openBrackets = 0
-        var closedBrackets = 0
-        uiState.expression.forEach {
-            if (it == '(') openBrackets++
-            if (it == ')') closedBrackets++
-        }
+        val openBrackets = uiState.expression.count { it == '(' }
+        val closedBrackets = uiState.expression.count { it == ')' }
         if (openBrackets - closedBrackets < 1) return
         uiState = uiState.copy(expression = uiState.expression + ")")
     }

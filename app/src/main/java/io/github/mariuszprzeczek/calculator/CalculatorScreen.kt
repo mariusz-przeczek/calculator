@@ -56,9 +56,9 @@ fun CalculatorDisplay(
             }
         }
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            CalcButton("C", onClear)
-            CalcButton("(", onOpenBracket)
-            CalcButton(")", onCloseBracket)
+            CalcButton("C", onClear, color = MaterialTheme.colorScheme.secondary)
+            CalcButton("(", onOpenBracket, color = MaterialTheme.colorScheme.secondary)
+            CalcButton(")", onCloseBracket, color = MaterialTheme.colorScheme.secondary)
             CalcButton("÷", { onOperator('÷') }, color = MaterialTheme.colorScheme.tertiary)
         }
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -83,7 +83,7 @@ fun CalculatorDisplay(
             Spacer(modifier = Modifier.weight(1f))
             CalcButton("0", { onDigit(0) })
             Spacer(modifier = Modifier.weight(1f))
-            Spacer(modifier = Modifier.weight(1f))
+            CalcButton("=", onEquals, color = MaterialTheme.colorScheme.tertiary)
         }
     }
 }
