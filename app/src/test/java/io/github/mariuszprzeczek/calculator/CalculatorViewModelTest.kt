@@ -233,7 +233,7 @@ class CalculatorViewModelTest {
 
     // --- Part 10: pressing buttons after a result ---
 
-    @Ignore("Needs the parser, Part 8-9")
+    @Ignore("Needs the parser, Part 10")
     @Test
     fun digitAfterResult_StartsNewNumber() {
         val vm = CalculatorViewModel()
@@ -243,7 +243,7 @@ class CalculatorViewModelTest {
         assertEquals("9", vm.uiState.display)
     }
 
-    @Ignore("Needs the parser, Part 8-9")
+    @Ignore("Needs the parser, Part 10")
     @Test
     fun fifteenDigitResultThenDigit_startsNew() {
         val vm = CalculatorViewModel()
@@ -253,7 +253,7 @@ class CalculatorViewModelTest {
         assertEquals("7", vm.uiState.display)
     }
 
-    @Ignore("Needs the parser, Part 8-9")
+    @Ignore("Needs the parser, Part 10")
     @Test
     fun backspaceAfterEquals_resultStaysUnchanged() {
         val vm = CalculatorViewModel()
@@ -265,7 +265,7 @@ class CalculatorViewModelTest {
 
     // --- Part 10: pressing buttons after Error ---
 
-    @Ignore("Needs the parser, Part 8-9")
+    @Ignore("Needs the parser, Part 10")
     @Test
     fun errorThenDigit_showsDigit() {
         val vm = CalculatorViewModel()
@@ -275,7 +275,7 @@ class CalculatorViewModelTest {
         assertEquals("7", vm.uiState.display)
     }
 
-    @Ignore("Needs the parser, Part 8-9")
+    @Ignore("Needs the parser, Part 10")
     @Test
     fun errorThenOperator_staysError() {
         val vm = CalculatorViewModel()
@@ -285,7 +285,7 @@ class CalculatorViewModelTest {
         assertEquals("Error", vm.uiState.display)
     }
 
-    @Ignore("Needs the parser, Part 8-9")
+    @Ignore("Needs the parser, Part 10")
     @Test
     fun errorThenNewSum_isCorrect() {
         val vm = CalculatorViewModel()
@@ -296,7 +296,7 @@ class CalculatorViewModelTest {
         assertEquals("8", vm.uiState.display)
     }
 
-    @Ignore("Needs the parser, Part 8-9")
+    @Ignore("Needs the parser, Part 10")
     @Test
     fun backspaceOnError_showsError() {
         val vm = CalculatorViewModel()
@@ -308,7 +308,7 @@ class CalculatorViewModelTest {
 
     // --- Part 10: live result while typing ---
 
-    @Ignore("Needs the parser, Part 8-9")
+    @Ignore("Needs the parser, Part 10")
     @Test
     fun onePlusTwoPlusThree_isSix() {
         val vm = CalculatorViewModel()
@@ -322,7 +322,7 @@ class CalculatorViewModelTest {
         assertEquals("6", vm.uiState.display)
     }
 
-    @Ignore("Needs the parser, Part 8-9")
+    @Ignore("Needs the parser, Part 10")
     @Test
     fun fiveMinusTwoPlusOne_isFour() {
         val vm = CalculatorViewModel()
@@ -336,7 +336,7 @@ class CalculatorViewModelTest {
         assertEquals("4", vm.uiState.display)
     }
 
-    @Ignore("Needs the parser, Part 8-9")
+    @Ignore("Needs the parser, Part 10")
     @Test
     fun dividedByZeroThenOperatorPressed_showsError() {
         val vm = CalculatorViewModel()

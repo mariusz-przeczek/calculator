@@ -45,7 +45,7 @@ class Evaluator(private val tokens: List<Token>) {
 
     fun evaluate(): Double {
         val result = expression()
-        return if (pos < tokens.size) error("Unexpected error")
+        return if (pos < tokens.size) error("Unexpected ${tokens[pos]}")
         else result
     }
 }
