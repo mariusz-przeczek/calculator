@@ -4,6 +4,8 @@ import org.junit.Test
 import org.junit.Assert.*
 
 class TokenizerTest {
+    // --- Numbers ---
+
     @Test
     fun emptyString_returnsEmptyList() {
         val expected: List<Token> = emptyList()
@@ -15,6 +17,8 @@ class TokenizerTest {
         val expected: List<Token> = listOf(Token.Number(7.0))
         assertEquals(expected, tokenize("7"))
     }
+
+    // --- Operators and brackets ---
 
     @Test
     fun multiDigitAndOperatorString_returnsCorrectTokens() {
@@ -50,6 +54,8 @@ class TokenizerTest {
         )
         assertEquals(expected, tokenize("7×(25)"))
     }
+
+    // --- Unfinished and invalid text ---
 
     @Test
     fun unfinishedText_stillTokenizes() {
