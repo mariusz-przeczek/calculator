@@ -4,6 +4,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import kotlin.math.abs
 
 class CalculatorViewModel : ViewModel() {
     var uiState by mutableStateOf(CalculatorUiState())
@@ -11,10 +12,10 @@ class CalculatorViewModel : ViewModel() {
 
     fun onDigit(d: Int) {
         val last = uiState.expression.lastOrNull()
-        if ( last == ')' ) return
+        if (last == ')') return
         val current = uiState.expression.takeLastWhile { it.isDigit() }
-        if ( current.length >= 15 ) return
-        val base = if (current == "0" ) uiState.expression.dropLast(1) else uiState.expression
+        if (current.length >= 15) return
+        val base = if (current == "0") uiState.expression.dropLast(1) else uiState.expression
         uiState = uiState.copy(expression = base + d)
     }
 
@@ -41,6 +42,20 @@ class CalculatorViewModel : ViewModel() {
     }
 
     fun onEquals() {
+        val result = try {
+            calculate(uiState.expression)
+        } catch (e: IllegalStateException) {
+            return
+        }
+        uiState = uiState.copy(expression = format(result))
+    }
+
+    private fun format(result: Double): String = when {
+        result.isInfinite() -> "Error"
+        result.isNaN() -> "Error"
+        abs(result) >= 1e15 -> "Error"
+        result % 1.0 == 0.0 -> result.toLong().toString()
+        else -> result.toString()
     }
 
     fun onClear() {
