@@ -11,25 +11,34 @@ class CalculatorViewModel : ViewModel() {
         private set
 
     fun onDigit(d: Int) {
+        if (uiState.justEvaluated) {
+            setExpression(d.toString())
+            return
+        }
         val last = uiState.expression.lastOrNull()
         if (last == ')') return
         val current = uiState.expression.takeLastWhile { it.isDigit() }
         if (current.length >= 15) return
         val base = if (current == "0") uiState.expression.dropLast(1) else uiState.expression
-        uiState = uiState.copy(expression = base + d)
+        setExpression(base + d)
     }
 
     fun onOperator(op: Char) {
         val last = uiState.expression.lastOrNull() ?: return
+        if (uiState.expression == "Error") return
         if (last == '(') return
         val base = if (last in "+-×÷") uiState.expression.dropLast(1) else uiState.expression
-        uiState = uiState.copy(expression = base + op)
+        setExpression(base + op)
     }
 
     fun onOpenBracket() {
+        if (uiState.justEvaluated) {
+            setExpression("(")
+            return
+        }
         val last = uiState.expression.lastOrNull()
         if (last != null && last !in "+-×÷(") return
-        uiState = uiState.copy(expression = uiState.expression + "(")
+        setExpression(uiState.expression + "(")
     }
 
     fun onCloseBracket() {
@@ -38,7 +47,7 @@ class CalculatorViewModel : ViewModel() {
         val openBrackets = uiState.expression.count { it == '(' }
         val closedBrackets = uiState.expression.count { it == ')' }
         if (openBrackets - closedBrackets < 1) return
-        uiState = uiState.copy(expression = uiState.expression + ")")
+        setExpression(uiState.expression + ")")
     }
 
     fun onEquals() {
@@ -47,7 +56,7 @@ class CalculatorViewModel : ViewModel() {
         } catch (e: IllegalStateException) {
             return
         }
-        uiState = uiState.copy(expression = format(result))
+        uiState = CalculatorUiState(expression = format(result), justEvaluated = true)
     }
 
     private fun format(result: Double): String = when {
@@ -63,6 +72,25 @@ class CalculatorViewModel : ViewModel() {
     }
 
     fun onBackspace() {
-        uiState = uiState.copy(expression = uiState.expression.dropLast(1))
+        if (uiState.justEvaluated) return
+        setExpression(uiState.expression.dropLast(1))
+    }
+
+    private fun preview(text: String): String {
+        try {
+            if (text.none { it in "+-×÷" }) return ""
+            var result = text.trimEnd('+', '-', '×', '÷', '(')
+            val openBrackets = result.count { it == '(' }
+            val closedBrackets = result.count { it == ')' }
+            result += ")".repeat(openBrackets - closedBrackets)
+            result = format(calculate(result))
+            return result
+        } catch (e: IllegalStateException) {
+            return ""
+        }
+    }
+
+    private fun setExpression(text: String) {
+        uiState = CalculatorUiState(expression = text, result = preview(text))
     }
 }

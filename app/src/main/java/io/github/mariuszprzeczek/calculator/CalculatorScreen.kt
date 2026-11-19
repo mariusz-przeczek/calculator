@@ -55,6 +55,16 @@ fun CalculatorDisplay(
                 Text("⌫", fontSize = 28.sp)
             }
         }
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                fontSize = if (state.display.length > 9) 24.sp else 36.sp,
+                textAlign = TextAlign.End,
+                modifier = Modifier.weight(1f),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                text = state.result,
+                maxLines = 1
+            )
+        }
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             CalcButton("C", onClear, color = MaterialTheme.colorScheme.secondary)
             CalcButton("(", onOpenBracket, color = MaterialTheme.colorScheme.secondary)
@@ -121,7 +131,7 @@ fun RowScope.CalcButton(
 fun CalculatorScreenPreview() {
     CalculatorTheme {
         CalculatorDisplay(
-            state = CalculatorUiState(expression = "123456789012345"),
+            state = CalculatorUiState(expression = "1234567890+1", result = "1234567891"),
             onDigit = {},
             onOperator = {},
             onEquals = {},
