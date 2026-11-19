@@ -72,20 +72,20 @@ class CalculatorViewModel : ViewModel() {
     }
 
     fun onBackspace() {
-        if (uiState.justEvaluated || uiState.expression == "Error") return
+        if (uiState.justEvaluated) return
         setExpression(uiState.expression.dropLast(1))
     }
 
     private fun preview(text: String): String {
         try {
-            if (!text.any { it in "+-×÷" }) return ""
+            if (text.none { it in "+-×÷" }) return ""
             var result = text.trimEnd('+', '-', '×', '÷', '(')
-            val openBrackets = text.count { it == '(' }
-            val closedBrackets = text.count { it == ')' }
+            val openBrackets = result.count { it == '(' }
+            val closedBrackets = result.count { it == ')' }
             result += ")".repeat(openBrackets - closedBrackets)
             result = format(calculate(result))
             return result
-        } catch (e: Exception) {
+        } catch (e: IllegalStateException) {
             return ""
         }
     }
