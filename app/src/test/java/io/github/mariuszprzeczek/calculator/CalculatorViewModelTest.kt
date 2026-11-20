@@ -267,6 +267,14 @@ class CalculatorViewModelTest {
         assertEquals("3", vm.uiState.display)
     }
 
+    @Test
+    fun pointThreeMinusPointOneMinusPointTwo_equalsZero() {
+        val vm = CalculatorViewModel()
+        vm.type(".3-.1-.2")
+        vm.onEquals()
+        assertEquals("0", vm.uiState.display)
+    }
+
     // --- Pressing buttons after Error ---
 
     @Test
