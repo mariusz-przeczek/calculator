@@ -7,6 +7,7 @@ private fun CalculatorViewModel.type(n: String) =
     n.forEach {
         when(it) {
             in '0'..'9' -> onDigit(it.digitToInt())
+            '.' -> onDecimal()
             in "+-×÷" -> onOperator(it)
             '(' -> onOpenBracket()
             ')' -> onCloseBracket()
@@ -348,5 +349,44 @@ class CalculatorViewModelTest {
         val vm = CalculatorViewModel()
         vm.type("12")
         assertEquals("", vm.uiState.result)
+    }
+
+    @Test
+    fun onePointFivePlusOnePointFive_resultShowsThree() {
+        val vm = CalculatorViewModel()
+        vm.type("1.5+1.5")
+        assertEquals("3", vm.uiState.result)
+    }
+
+    // --- Decimal point tests ---
+
+    @Test
+    fun fiveTimesDot_showsFiveTimesZeroDot() {
+        val vm = CalculatorViewModel()
+        vm.type("5×.")
+        assertEquals("5×0.", vm.uiState.display)
+    }
+
+    @Test
+    fun onePointFivePoint_staysOnePointFive() {
+        val vm = CalculatorViewModel()
+        vm.type("1.5.")
+        assertEquals("1.5", vm.uiState.display)
+    }
+
+    @Test
+    fun twoInBracketsThenPoint_showsTwoInBrackets() {
+        val vm = CalculatorViewModel()
+        vm.type("(2).")
+        assertEquals("(2)", vm.uiState.display)
+    }
+
+    @Test
+    fun dotAfterResult_showsZeroPoint() {
+        val vm = CalculatorViewModel()
+        vm.type("1+2")
+        vm.onEquals()
+        vm.onDecimal()
+        assertEquals("0.", vm.uiState.display)
     }
 }

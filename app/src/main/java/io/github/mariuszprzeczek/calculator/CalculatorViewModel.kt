@@ -17,10 +17,25 @@ class CalculatorViewModel : ViewModel() {
         }
         val last = uiState.expression.lastOrNull()
         if (last == ')') return
-        val current = uiState.expression.takeLastWhile { it.isDigit() }
-        if (current.length >= 15) return
+        val current = uiState.expression.takeLastWhile { it.isDigit() || it == '.' }
+        if (current.filter { it.isDigit() }.length >= 15) return
         val base = if (current == "0") uiState.expression.dropLast(1) else uiState.expression
         setExpression(base + d)
+    }
+
+    fun onDecimal() {
+        val last = uiState.expression.lastOrNull()
+        if (uiState.justEvaluated || last == null) {
+            setExpression("0.")
+            return
+        }
+        if (last in "+-×÷(") {
+            setExpression(uiState.expression + "0.")
+            return
+        }
+        val current = uiState.expression.takeLastWhile { it.isDigit() || it == '.' }
+        if (last == ')' || current.any { it == '.' }) return
+        setExpression(uiState.expression + ".")
     }
 
     fun onOperator(op: Char) {
