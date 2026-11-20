@@ -4,6 +4,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import java.util.Locale
 import kotlin.math.abs
 
 class CalculatorViewModel : ViewModel() {
@@ -78,8 +79,7 @@ class CalculatorViewModel : ViewModel() {
         result.isInfinite() -> "Error"
         result.isNaN() -> "Error"
         abs(result) >= 1e15 -> "Error"
-        result % 1.0 == 0.0 -> result.toLong().toString()
-        else -> result.toString()
+        else -> String.format(Locale.US, "%.10f", result).trimEnd('0').trimEnd('.')
     }
 
     fun onClear() {

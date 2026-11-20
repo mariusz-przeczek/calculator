@@ -389,4 +389,28 @@ class CalculatorViewModelTest {
         vm.onDecimal()
         assertEquals("0.", vm.uiState.display)
     }
+
+    @Test
+    fun pointOneplusPointTwo_equalsPointThree() {
+        val vm = CalculatorViewModel()
+        vm.type("0.1+0.2")
+        vm.onEquals()
+        assertEquals("0.3", vm.uiState.display)
+    }
+
+    @Test
+    fun sevenDividedByTwo_equalsThreePointFive() {
+        val vm = CalculatorViewModel()
+        vm.type("7÷2")
+        vm.onEquals()
+        assertEquals("3.5", vm.uiState.display)
+    }
+
+    @Test
+    fun oneDividedByThree_equalsZeroPointManyThree() {
+        val vm = CalculatorViewModel()
+        vm.type("1÷3")
+        vm.onEquals()
+        assertEquals("0.3333333333", vm.uiState.display)
+    }
 }
