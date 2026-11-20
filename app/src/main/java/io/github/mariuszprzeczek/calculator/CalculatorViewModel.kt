@@ -79,7 +79,11 @@ class CalculatorViewModel : ViewModel() {
         result.isInfinite() -> "Error"
         result.isNaN() -> "Error"
         abs(result) >= 1e15 -> "Error"
-        else -> String.format(Locale.US, "%.10f", result).trimEnd('0').trimEnd('.')
+        else -> {
+            val output = String.format(Locale.US, "%.10f", result).trimEnd('0').trimEnd('.')
+            if (output == "-0") "0"
+            else output
+        }
     }
 
     fun onClear() {

@@ -197,8 +197,15 @@ class CalculatorViewModelTest {
     @Test
     fun twoPlusThenEquals_staysTwoPlus() {
         val vm = CalculatorViewModel()
-        vm.type("(2+(")
+        vm.type("2+")
         vm.onEquals()
+        assertEquals("2+", vm.uiState.display)
+    }
+
+    @Test
+    fun resultShowsTwo() {
+        val vm = CalculatorViewModel()
+        vm.type("(2+(")
         assertEquals("2", vm.uiState.result)
     }
 
