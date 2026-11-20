@@ -203,7 +203,7 @@ class CalculatorViewModelTest {
     }
 
     @Test
-    fun resultShowsTwo() {
+    fun bracketsTwoPlusOpenBrackets_resultShowsTwo() {
         val vm = CalculatorViewModel()
         vm.type("(2+(")
         assertEquals("2", vm.uiState.result)
