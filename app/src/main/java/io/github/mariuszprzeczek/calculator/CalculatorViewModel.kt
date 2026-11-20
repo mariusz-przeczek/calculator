@@ -4,6 +4,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import java.util.Locale
 import kotlin.math.abs
 
 class CalculatorViewModel : ViewModel() {
@@ -17,10 +18,25 @@ class CalculatorViewModel : ViewModel() {
         }
         val last = uiState.expression.lastOrNull()
         if (last == ')') return
-        val current = uiState.expression.takeLastWhile { it.isDigit() }
-        if (current.length >= 15) return
+        val current = uiState.expression.takeLastWhile { it.isDigit() || it == '.' }
+        if (current.filter { it.isDigit() }.length >= 15) return
         val base = if (current == "0") uiState.expression.dropLast(1) else uiState.expression
         setExpression(base + d)
+    }
+
+    fun onDecimal() {
+        val last = uiState.expression.lastOrNull()
+        if (uiState.justEvaluated || last == null) {
+            setExpression("0.")
+            return
+        }
+        if (last in "+-×÷(") {
+            setExpression(uiState.expression + "0.")
+            return
+        }
+        val current = uiState.expression.takeLastWhile { it.isDigit() || it == '.' }
+        if (last == ')' || current.any { it == '.' }) return
+        setExpression(uiState.expression + ".")
     }
 
     fun onOperator(op: Char) {
@@ -63,8 +79,11 @@ class CalculatorViewModel : ViewModel() {
         result.isInfinite() -> "Error"
         result.isNaN() -> "Error"
         abs(result) >= 1e15 -> "Error"
-        result % 1.0 == 0.0 -> result.toLong().toString()
-        else -> result.toString()
+        else -> {
+            val output = String.format(Locale.US, "%.10f", result).trimEnd('0').trimEnd('.')
+            if (output == "-0") "0"
+            else output
+        }
     }
 
     fun onClear() {

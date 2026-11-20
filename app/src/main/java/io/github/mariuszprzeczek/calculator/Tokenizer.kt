@@ -9,7 +9,7 @@ fun tokenize(text: String): List<Token> {
         when {
             c.isDigit() -> {
                 val start = i
-                while (i < text.length && text[i].isDigit()) i++
+                while (i < text.length && (text[i].isDigit() || text[i] == '.')) i++
                 result.add(Token.Number(text.substring(start, i).toDouble()))
             }
             c in "+-×÷" -> {

@@ -1,7 +1,8 @@
 package io.github.mariuszprzeczek.calculator
 
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertThrows
 import org.junit.Test
-import org.junit.Assert.*
 
 class TokenizerTest {
     // --- Numbers ---
@@ -59,12 +60,27 @@ class TokenizerTest {
 
     @Test
     fun unfinishedText_stillTokenizes() {
-        val expected: List<Token> = listOf(Token.OpenBracket, Token.Number(2.0), Token.Operator('+'))
+        val expected: List<Token> =
+            listOf(Token.OpenBracket, Token.Number(2.0), Token.Operator('+'))
         assertEquals(expected, tokenize("(2+"))
     }
 
     @Test
     fun unknownChar_throwsError() {
         assertThrows(IllegalStateException::class.java) { tokenize("2a") }
+    }
+
+    // --- Decimal point ---
+    @Test
+    fun oneAndAHalfPlusTwo_isTokenizedCorrectly() {
+        val expected: List<Token> =
+            listOf(Token.Number(1.5), Token.Operator('+'), Token.Number(2.0))
+        assertEquals(expected, tokenize("1.5+2"))
+    }
+
+    @Test
+    fun twoWithDot_givesTwoPointZero() {
+        val expected: List<Token> = listOf(Token.Number(2.0))
+        assertEquals(expected, tokenize("2."))
     }
 }

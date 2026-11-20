@@ -7,6 +7,7 @@ private fun CalculatorViewModel.type(n: String) =
     n.forEach {
         when(it) {
             in '0'..'9' -> onDigit(it.digitToInt())
+            '.' -> onDecimal()
             in "+-×÷" -> onOperator(it)
             '(' -> onOpenBracket()
             ')' -> onCloseBracket()
@@ -201,6 +202,13 @@ class CalculatorViewModelTest {
         assertEquals("2+", vm.uiState.display)
     }
 
+    @Test
+    fun bracketsTwoPlusOpenBrackets_resultShowsTwo() {
+        val vm = CalculatorViewModel()
+        vm.type("(2+(")
+        assertEquals("2", vm.uiState.result)
+    }
+
     // --- Equals: Error ---
 
     @Test
@@ -257,6 +265,14 @@ class CalculatorViewModelTest {
         vm.onEquals()
         vm.onBackspace()
         assertEquals("3", vm.uiState.display)
+    }
+
+    @Test
+    fun pointThreeMinusPointOneMinusPointTwo_equalsZero() {
+        val vm = CalculatorViewModel()
+        vm.type(".3-.1-.2")
+        vm.onEquals()
+        assertEquals("0", vm.uiState.display)
     }
 
     // --- Pressing buttons after Error ---
@@ -348,5 +364,68 @@ class CalculatorViewModelTest {
         val vm = CalculatorViewModel()
         vm.type("12")
         assertEquals("", vm.uiState.result)
+    }
+
+    @Test
+    fun onePointFivePlusOnePointFive_resultShowsThree() {
+        val vm = CalculatorViewModel()
+        vm.type("1.5+1.5")
+        assertEquals("3", vm.uiState.result)
+    }
+
+    // --- Decimal point tests ---
+
+    @Test
+    fun fiveTimesDot_showsFiveTimesZeroDot() {
+        val vm = CalculatorViewModel()
+        vm.type("5×.")
+        assertEquals("5×0.", vm.uiState.display)
+    }
+
+    @Test
+    fun onePointFivePoint_staysOnePointFive() {
+        val vm = CalculatorViewModel()
+        vm.type("1.5.")
+        assertEquals("1.5", vm.uiState.display)
+    }
+
+    @Test
+    fun twoInBracketsThenPoint_showsTwoInBrackets() {
+        val vm = CalculatorViewModel()
+        vm.type("(2).")
+        assertEquals("(2)", vm.uiState.display)
+    }
+
+    @Test
+    fun dotAfterResult_showsZeroPoint() {
+        val vm = CalculatorViewModel()
+        vm.type("1+2")
+        vm.onEquals()
+        vm.onDecimal()
+        assertEquals("0.", vm.uiState.display)
+    }
+
+    @Test
+    fun pointOneplusPointTwo_equalsPointThree() {
+        val vm = CalculatorViewModel()
+        vm.type("0.1+0.2")
+        vm.onEquals()
+        assertEquals("0.3", vm.uiState.display)
+    }
+
+    @Test
+    fun sevenDividedByTwo_equalsThreePointFive() {
+        val vm = CalculatorViewModel()
+        vm.type("7÷2")
+        vm.onEquals()
+        assertEquals("3.5", vm.uiState.display)
+    }
+
+    @Test
+    fun oneDividedByThree_equalsZeroPointManyThree() {
+        val vm = CalculatorViewModel()
+        vm.type("1÷3")
+        vm.onEquals()
+        assertEquals("0.3333333333", vm.uiState.display)
     }
 }

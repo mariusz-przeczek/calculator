@@ -34,6 +34,7 @@ fun CalculatorDisplay(
     onBackspace: () -> Unit,
     onOpenBracket: () -> Unit,
     onCloseBracket: () -> Unit,
+    onDecimal: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -90,7 +91,7 @@ fun CalculatorDisplay(
             CalcButton("+", { onOperator('+') }, color = MaterialTheme.colorScheme.tertiary)
         }
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            Spacer(modifier = Modifier.weight(1f))
+            CalcButton(".", onDecimal)
             CalcButton("0", { onDigit(0) })
             Spacer(modifier = Modifier.weight(1f))
             CalcButton("=", onEquals, color = MaterialTheme.colorScheme.tertiary)
@@ -109,6 +110,7 @@ fun CalculatorScreen(modifier: Modifier = Modifier, viewModel: CalculatorViewMod
         onBackspace = viewModel::onBackspace,
         onOpenBracket = viewModel::onOpenBracket,
         onCloseBracket = viewModel::onCloseBracket,
+        onDecimal = viewModel::onDecimal,
         modifier = modifier
     )
 }
@@ -138,6 +140,7 @@ fun CalculatorScreenPreview() {
             onBackspace = {},
             onClear = {},
             onOpenBracket = {},
+            onDecimal = {},
             onCloseBracket = {})
     }
 }
