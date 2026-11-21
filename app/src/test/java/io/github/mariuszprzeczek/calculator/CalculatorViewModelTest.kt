@@ -314,6 +314,15 @@ class CalculatorViewModelTest {
         assertEquals("Error", vm.uiState.display)
     }
 
+    @Test
+    fun minusOnError_showsError() {
+        val vm = CalculatorViewModel()
+        vm.type("9÷0")
+        vm.onEquals()
+        vm.onOperator('-')
+        assertEquals("Error", vm.uiState.display)
+    }
+
     // --- Live result while typing ---
 
     @Test
@@ -406,7 +415,7 @@ class CalculatorViewModelTest {
     }
 
     @Test
-    fun pointOneplusPointTwo_equalsPointThree() {
+    fun pointOnePlusPointTwo_equalsPointThree() {
         val vm = CalculatorViewModel()
         vm.type("0.1+0.2")
         vm.onEquals()
@@ -427,5 +436,77 @@ class CalculatorViewModelTest {
         vm.type("1÷3")
         vm.onEquals()
         assertEquals("0.3333333333", vm.uiState.display)
+    }
+
+    // --- Operations with negative numbers ---
+    @Test
+    fun minusFive_showsMinusFive() {
+        val vm = CalculatorViewModel()
+        vm.type("-5")
+        assertEquals("-5", vm.uiState.display)
+    }
+
+    @Test
+    fun fiveTimesMinusThree_equalsMinusFifteen() {
+        val vm = CalculatorViewModel()
+        vm.type("5×-3")
+        vm.onEquals()
+        assertEquals("-15", vm.uiState.display)
+    }
+
+    @Test
+    fun sixDividedByMinusThenPlus_showsSixDividedByMinus() {
+        val vm = CalculatorViewModel()
+        vm.type("6÷-+")
+        assertEquals("6÷-", vm.uiState.display)
+    }
+
+    @Test
+    fun twoMinusMinus_showsTwoMinus() {
+        val vm = CalculatorViewModel()
+        vm.type("2--")
+        assertEquals("2-", vm.uiState.display)
+    }
+
+    @Test
+    fun twoMinusFiveEqualsPlusOneEquals_showsMinusTwo() {
+        val vm = CalculatorViewModel()
+        vm.type("2-5")
+        vm.onEquals()
+        assertEquals("-3", vm.uiState.display)
+        vm.type("+1")
+        vm.onEquals()
+        assertEquals("-2", vm.uiState.display)
+    }
+
+    @Test
+    fun bracketsThenMinusTwice_showsBracketMinus() {
+        val vm = CalculatorViewModel()
+        vm.type("(-")
+        assertEquals("(-", vm.uiState.display)
+        vm.onOperator('-')
+        assertEquals("(-", vm.uiState.display)
+    }
+
+    @Test
+    fun twoPlusMinus_showsTwoMinus() {
+        val vm = CalculatorViewModel()
+        vm.type("2+-")
+        assertEquals("2-", vm.uiState.display)
+    }
+
+    // --- Live preview for negative numbers ---
+    @Test
+    fun minusFive_resultShowsNothing() {
+        val vm = CalculatorViewModel()
+        vm.type("-5")
+        assertEquals("", vm.uiState.result)
+    }
+
+    @Test
+    fun minusFivePlusTwo_resultShowsMinusThree() {
+        val vm = CalculatorViewModel()
+        vm.type("-5+2")
+        assertEquals("-3", vm.uiState.result)
     }
 }

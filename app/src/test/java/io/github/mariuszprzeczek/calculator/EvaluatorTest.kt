@@ -71,4 +71,30 @@ class EvaluatorTest {
     fun bracketsWithoutOperator_throws() {
         assertThrows(IllegalStateException::class.java) { calculate("2(3)") }
     }
+
+    @Test
+    fun standaloneMinus_throws() {
+        assertThrows(IllegalStateException::class.java) { calculate("-") }
+    }
+
+    // --- Operations with negative numbers ---
+    @Test
+    fun minusThreePlusOne_givesMinusTwo() {
+        assertEquals(-2.0, calculate("-3+1"), 0.0)
+    }
+
+    @Test
+    fun twoTimesMinusThree_givesMinusSix() {
+        assertEquals(-6.0, calculate("2×-3"), 0.0)
+    }
+
+    @Test
+    fun twoMinusMinusOne_givesThree() {
+        assertEquals(3.0, calculate("2--1"), 0.0)
+    }
+
+    @Test
+    fun minusTwoInBracketsTimesMinusFourInBrackets_givesEight() {
+        assertEquals(8.0, calculate("(-2)×(-4)"), 0.0)
+    }
 }
