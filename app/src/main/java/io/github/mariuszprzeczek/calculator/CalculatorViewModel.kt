@@ -40,10 +40,25 @@ class CalculatorViewModel : ViewModel() {
     }
 
     fun onOperator(op: Char) {
-        val last = uiState.expression.lastOrNull() ?: return
+        val last = uiState.expression.lastOrNull()
+            ?: if (op == '-') {
+                setExpression(op.toString())
+                return
+            } else return
         if (uiState.expression == "Error") return
-        if (last == '(') return
-        val base = if (last in "+-×÷") uiState.expression.dropLast(1) else uiState.expression
+        if (last == '(') {
+            if (op == '-') {
+                setExpression(uiState.expression + op)
+                return
+            } else return
+        }
+        val base = when {
+            op == '-' && last == '-' -> return
+            op in "+×÷" && endsWithSign(uiState.expression) -> return
+            op == '-' && last in "×÷" -> uiState.expression
+            last.isDigit() || last in ".)" -> uiState.expression
+            else -> uiState.expression.dropLast(1)
+        }
         setExpression(base + op)
     }
 
@@ -98,6 +113,7 @@ class CalculatorViewModel : ViewModel() {
     private fun preview(text: String): String {
         try {
             if (text.none { it in "+-×÷" }) return ""
+            if (text.first() == '-' && text.count { it in "+-×÷" } == 1) return ""
             var result = text.trimEnd('+', '-', '×', '÷', '(')
             val openBrackets = result.count { it == '(' }
             val closedBrackets = result.count { it == ')' }
@@ -111,5 +127,11 @@ class CalculatorViewModel : ViewModel() {
 
     private fun setExpression(text: String) {
         uiState = CalculatorUiState(expression = text, result = preview(text))
+    }
+
+    private fun endsWithSign(text: String): Boolean {
+        if (text.lastOrNull() != '-') return false
+        val before = text.dropLast(1).lastOrNull()
+        return before == null || before in "(×÷"
     }
 }

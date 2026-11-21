@@ -33,6 +33,7 @@ class Evaluator(private val tokens: List<Token>) {
         val t = tokens.getOrNull(pos++) ?: error("Unexpected end")
         return when (t) {
             is Token.Number -> t.value
+            Token.Operator('-') -> -(factor())
             Token.OpenBracket -> {
                 val inside = expression()
                 if (tokens.getOrNull(pos++) != Token.CloseBracket) error("Missing )")
