@@ -100,6 +100,13 @@ class CalculatorViewModelTest {
         assertEquals("(2)", vm.uiState.display)
     }
 
+    @Test
+    fun closeBracketsThenOperator_shownCorrectly() {
+        val vm = CalculatorViewModel()
+        vm.type("(2+3)×")
+        assertEquals("(2+3)×", vm.uiState.display)
+    }
+
     // --- Clear and backspace ---
 
     @Test
@@ -436,6 +443,13 @@ class CalculatorViewModelTest {
         vm.type("1÷3")
         vm.onEquals()
         assertEquals("0.3333333333", vm.uiState.display)
+    }
+
+    @Test
+    fun decimalPoint_notLostOnOperator() {
+        val vm = CalculatorViewModel()
+        vm.type("2.+")
+        assertEquals("2.+", vm.uiState.display)
     }
 
     // --- Operations with negative numbers ---

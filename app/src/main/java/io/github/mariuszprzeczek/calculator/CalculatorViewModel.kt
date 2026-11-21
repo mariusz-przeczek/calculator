@@ -56,7 +56,7 @@ class CalculatorViewModel : ViewModel() {
             op == '-' && last == '-' -> return
             op in "+×÷" && endsWithSign(uiState.expression) -> return
             op == '-' && last in "×÷" -> uiState.expression
-            last.isDigit() -> uiState.expression
+            last.isDigit() || last in ".)" -> uiState.expression
             else -> uiState.expression.dropLast(1)
         }
         setExpression(base + op)
